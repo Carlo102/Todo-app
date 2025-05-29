@@ -36,6 +36,7 @@ function App() {
     setTodos(newTodoList)
     setEditingIndex(null)
     setEditedText('')
+    handleSaveData(newTodoList)
   }
 
   function handleDeleteTodo(index) {
@@ -60,17 +61,23 @@ function App() {
   }
 
   function handleSaveData(currTodos) {
-    localStorage.setItem('todo-app', JSON.stringify ({ todos: currTodos }))
+    localStorage.setItem('react-todo-app-data', JSON.stringify({ todos: currTodos }))
   }
 
 
   useEffect(() => {
-    if (!localStorage || !localStorage.getItem('todo-app')) { return }
-
-    let db = JSON.parse(localStorage.getItem('todo-app'))
-    setTodos(db.todos)
-
-  }, [])
+    try {
+      const savedTodos = localStorage.getItem('react-todo-app-data');
+      if (savedTodos) {
+        const db = JSON.parse(savedTodos);
+        if (db && db.todos) {
+          setTodos(db.todos);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading todos from localStorage:', error);
+    }
+  }, []);
 
   return (
 
